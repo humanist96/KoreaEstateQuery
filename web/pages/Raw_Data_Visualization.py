@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
+
 def set_custom_style():
     st.markdown("""
         <style>
@@ -150,7 +151,7 @@ def data_visualization():
     # Main content
     st.title("Data Visualization")
 
-    # Initialize session state
+    # Initialize session states
     if 'current_step' not in st.session_state:
         st.session_state.current_step = 1
     if 'df' not in st.session_state:
@@ -163,6 +164,14 @@ def data_visualization():
         st.session_state.preprocessing_complete = False
     if 'chart_type' not in st.session_state:
         st.session_state.chart_type = None
+    if 'standardization' not in st.session_state:
+        st.session_state.standardization = False
+    if 'missing_values' not in st.session_state:
+        st.session_state.missing_values = False
+    if 'outliers' not in st.session_state:
+        st.session_state.outliers = False
+    if 'normalization' not in st.session_state:
+        st.session_state.normalization = False
 
     # STEP 1: Data Selection
     with st.expander("STEP 1. Data Selection", expanded=st.session_state.current_step == 1):
@@ -200,27 +209,55 @@ def data_visualization():
                 with col1:
                     # Column selection
                     st.subheader("Select Columns")
-                    st.session_state.selected_columns = st.multiselect(
+                    selected_cols = st.multiselect(
                         "Choose columns for analysis:",
-                        st.session_state.df.columns.tolist()
+                        st.session_state.df.columns.tolist(),
+                        default=st.session_state.selected_columns if st.session_state.selected_columns else None
                     )
+                    # Update session state after selection
+                    st.session_state.selected_columns = selected_cols
 
                 with col2:
-                    # Preprocessing methods
+                    # Preprocessing methods with state preservation
                     st.subheader("Preprocessing Methods")
-                    standardization = st.checkbox("Standardization")
-                    missing_values = st.checkbox("Handle Missing Values")
-                    outliers = st.checkbox("Remove Outliers")
-                    normalization = st.checkbox("Normalization")
+                    st.session_state.standardization = st.checkbox(
+                        "Standardization",
+                        value=st.session_state.standardization
+                    )
+                    st.session_state.missing_values = st.checkbox(
+                        "Handle Missing Values",
+                        value=st.session_state.missing_values
+                    )
+                    st.session_state.outliers = st.checkbox(
+                        "Remove Outliers",
+                        value=st.session_state.outliers
+                    )
+                    st.session_state.normalization = st.checkbox(
+                        "Normalization",
+                        value=st.session_state.normalization
+                    )
 
-                # Left-aligned buttons with conditional display
+                # Preprocessing buttons with state management
                 if not st.session_state.preprocessing_complete:
                     if st.button("Apply Preprocessing", type="primary"):
+                        # Perform preprocessing based on selected methods
+                        if st.session_state.standardization:
+                            # Add standardization logic here
+                            pass
+                        if st.session_state.missing_values:
+                            # Add missing values handling logic here
+                            pass
+                        if st.session_state.outliers:
+                            # Add outliers removal logic here
+                            pass
+                        if st.session_state.normalization:
+                            # Add normalization logic here
+                            pass
+
                         st.session_state.preprocessing_complete = True
                         st.success("Preprocessing completed successfully!")
                         st.rerun()
 
-                # Show Proceed button only after preprocessing is complete
                 if st.session_state.preprocessing_complete:
                     if st.button("Proceed to Visualization →", type="primary"):
                         st.session_state.current_step = 3
@@ -299,6 +336,10 @@ def data_visualization():
             st.session_state.preprocessing_done = False
             st.session_state.preprocessing_complete = False
             st.session_state.chart_type = None
+            st.session_state.standardization = False
+            st.session_state.missing_values = False
+            st.session_state.outliers = False
+            st.session_state.normalization = False
             st.rerun()
 
 
