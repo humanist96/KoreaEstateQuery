@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  streamlit:
+    build: .
+    container_name: streamlit-app
+    ports:
+      - "8501:8501"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - CRAWL4AI_API_KEY=${CRAWL4AI_API_KEY}
+    volumes:
+      - .:/app
+    restart: always
+    networks:
+      - streamlit-network
+
+networks:
+  streamlit-network:
+    driver: bridge
