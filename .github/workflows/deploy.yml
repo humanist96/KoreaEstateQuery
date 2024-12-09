@@ -39,8 +39,11 @@ jobs:
           nohup streamlit run web/Home.py --server.port 8501 &
 
       # 6. Cloudflared 터널 실행
-      - name: Run Cloudflare Tunnel
-        env:
-          TUNNEL_TOKEN: ${{ secrets.CLOUDFLARED_TOKEN }}
+      - name: Setup Cloudflared
+        uses: cloudflare/cloudflared-tunnel-action@v1
+        with:
+          tunnel-token: ${{ secrets.TUNNEL_TOKEN }}
+          
+      - name: Run Tunnel
         run: |
           cloudflared tunnel run
