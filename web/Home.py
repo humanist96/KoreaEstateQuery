@@ -32,9 +32,8 @@ def main():
     with st.sidebar:
         st.title("Navigation")
         st.page_link("Home.py", label="Home", icon="🌟")
-        # st.page_link("pages/search.py", label="Property Search", icon="🔍")
-        # st.page_link("pages/analysis.py", label="Market Analysis", icon="📊")
-        # st.page_link("pages/about.py", label="About", icon="ℹ️")
+        st.page_link("pages/Search.py", label="Property Search", icon="🔍")
+        st.page_link("pages/Raw_Data_Visualization.py", label="Raw Data Visualization", icon="📊")
 
         st.markdown("---")
         with st.expander("Contact"):
