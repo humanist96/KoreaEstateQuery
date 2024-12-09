@@ -1,4 +1,10 @@
 # Byte-compiled / optimized / DLL files
+*.pyc
+.vscode/
+.streamlit/secrets.toml
+
+gathering_data/
+
 __pycache__/
 *.py[cod]
 *$py.class

@@ -1,0 +1,39 @@
+name: Deploy Streamlit with Cloudflare Tunnel
+
+on:
+  push:
+    branches:
+      - main  # Main 브랜치에 Push될 때 실행
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. 저장소 코드 가져오기
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. Python 환경 설정
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
+      # 3. 의존성 설치
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # 4. Streamlit 실행
+      - name: Start Streamlit App
+        run: |
+          nohup streamlit run app.py --server.port 8501 &
+
+      # 5. Cloudflared 실행
+      - name: Start Cloudflare Tunnel
+        env:
+          TUNNEL_TOKEN: ${{ secrets.CLOUDFLARED_TOKEN }}
+        run: |
+          cloudflared tunnel run
