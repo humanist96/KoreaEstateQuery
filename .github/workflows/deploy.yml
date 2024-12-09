@@ -36,7 +36,7 @@ jobs:
       # 5. Streamlit 실행
       - name: Start Streamlit App
         run: |
-          nohup streamlit run app.py --server.port 8501 &
+          nohup streamlit run web/Home.py --server.port 8501 &
 
       # 6. Cloudflared 터널 실행
       - name: Run Cloudflare Tunnel
