@@ -46,7 +46,7 @@ jobs:
           tunnel: 70cfadb4-882e-4e4d-8a78-1b3731e30c62
           credentials-file: ~/.cloudflared/70cfadb4-882e-4e4d-8a78-1b3731e30c62.json
           ingress:
-            - hostname: streamlit.yourdomain.com
+            - hostname: krsearchrealestate.work
               service: http://localhost:8501
             - service: http_status:404
           " > config.yml
