@@ -48,3 +48,4 @@ jobs:
       - name: Run Cloudflare Tunnel
         run: |
           cloudflared tunnel --config config.yml run streamlit
+        
