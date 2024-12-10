@@ -1,9 +1,12 @@
-tunnel: streamlit
+# 터널 ID (Cloudflare에서 생성한 고유한 터널 ID)
+tunnel: 70cfadb4-882e-4e4d-8a78-1b3731e30c62
+
+# 터널 자격 증명 파일 경로 (Cloudflare에서 제공한 파일의 경로)
 credentials-file: ~/.cloudflared/70cfadb4-882e-4e4d-8a78-1b3731e30c62.json
 
-ingress:
-  - hostname: krsearchrealestate.work
-    service: http://localhost:8501
-  - service: http_status:404
-
 origincert: ~/.cloudflared/cert.pem
+
+ingress:
+  - hostname: krsearchrealestate.work   # 사용자 정의 도메인 (Cloudflare에서 설정)
+    service: http://localhost:8501      # Streamlit 애플리케이션 실행 주소
+  - service: http_status:404            # 정의되지 않은 요청에 대한 기본 응답 (404 에러)
