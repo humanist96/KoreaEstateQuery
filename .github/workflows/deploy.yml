@@ -32,6 +32,7 @@ jobs:
         run: |
           mkdir -p ~/.cloudflared
           echo "${{ secrets.CLOUDFLARED_TUNNEL_CREDENTIALS }}" > ~/.cloudflared/70cfadb4-882e-4e4d-8a78-1b3731e30c62.json
+          sudo chmod 777 ~/.cloudflared/70cfadb4-882e-4e4d-8a78-1b3731e30c62.json
 
       - name: Verify Tunnel Credentials
         run: |
