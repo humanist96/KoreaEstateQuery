@@ -30,6 +30,7 @@ jobs:
 
       - name: Set up Origin Certificate
         run: |
+          mkdir -p ~/.cloudflared
           echo "${{ secrets.CLOUDFLARED_ORIGIN_CERT }}" > ~/.cloudflared/cert.pem
 
       - name: Verify cloudflared Installation
