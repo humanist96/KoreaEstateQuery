@@ -1,4 +1,4 @@
-name: Deploy Streamlit App
+name: Deploy Streamlit App with Cloudflare Tunnel
 
 on:
   push:
@@ -8,6 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -21,13 +22,22 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: Start Streamlit
+      - name: Install cloudflared
+        run: |
+          wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
+          sudo mv cloudflared-linux-amd64 /usr/local/bin/cloudflared
+          sudo chmod +x /usr/local/bin/cloudflared
+
+      - name: Verify cloudflared Installation
+        run: |
+          cloudflared --version
+
+      - name: Start Streamlit App
         run: |
           nohup streamlit run web/Home.py &
 
-      - name: Deploy via Cloudflare Tunnel
+      - name: Run Cloudflare Tunnel
         run: |
-          cloudflared tunnel run streamlit
+          cloudflared tunnel --config config.yml run streamlit
         env:
           CLOUDFLARED_CREDENTIALS: ${{ secrets.CLOUDFLARED_CREDENTIALS }}
-
