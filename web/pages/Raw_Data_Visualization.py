@@ -133,25 +133,7 @@ def set_custom_style():
     """, unsafe_allow_html=True)
 
 
-def data_visualization():
-    set_custom_style()
-
-    # Sidebar
-    with st.sidebar:
-        st.title("Navigation")
-        st.page_link("Home.py", label="Home", icon="🌟")
-        st.page_link("pages/Search.py", label="Property Search", icon="🔍")
-        st.page_link("pages/Raw_Data_Visualization.py", label="Raw Data Visualization", icon="📊")
-
-        st.markdown("---")
-        with st.expander("Contact"):
-            st.markdown("📧 support@example.com")
-            st.markdown("📱 +82 10-1234-5678")
-
-    # Main content
-    st.title("Data Visualization")
-
-    # Initialize session states
+def initialize_session_state():
     if 'current_step' not in st.session_state:
         st.session_state.current_step = 1
     if 'df' not in st.session_state:
@@ -172,12 +154,48 @@ def data_visualization():
         st.session_state.outliers = False
     if 'normalization' not in st.session_state:
         st.session_state.normalization = False
+    if 'file_uploader' not in st.session_state:
+        st.session_state.file_uploader = None
+
+
+def reset_session_state():
+    st.session_state.current_step = 1
+    st.session_state.df = None
+    st.session_state.selected_columns = None
+    st.session_state.preprocessing_done = False
+    st.session_state.preprocessing_complete = False
+    st.session_state.chart_type = None
+    st.session_state.standardization = False
+    st.session_state.missing_values = False
+    st.session_state.outliers = False
+    st.session_state.normalization = False
+    st.session_state.file_uploader = None
+    st.rerun()
+
+
+def data_visualization():
+    set_custom_style()
+
+    # Sidebar
+    with st.sidebar:
+        st.title("Navigation")
+        st.page_link("Home.py", label="Home", icon="🏠")
+        st.page_link("pages/property_search.py", label="Property Search", icon="🔍")
+        st.page_link("pages/data_visualization.py", label="Raw Data Visualization", icon="📊")
+
+        st.markdown("---")
+        with st.expander("Contact"):
+            st.markdown("📧 support@example.com")
+            st.markdown("📱 +82 10-1234-5678")
+
+    # Main content
+    st.title("Data Visualization")
+
+    # Initialize session state
+    initialize_session_state()
 
     # STEP 1: Data Selection
     with st.expander("STEP 1. Data Selection", expanded=st.session_state.current_step == 1):
-        if 'file_uploader' not in st.session_state:
-            st.session_state.file_uploader = None
-
         uploaded_file = st.file_uploader("Upload your data",
                                          type=["csv", "xlsx"],
                                          help="* File size must be less than 5MB",
@@ -335,24 +353,7 @@ def data_visualization():
     # Reset button at the bottom
     if st.session_state.current_step > 1:
         if st.button("Reset All"):
-            # Reset all session states
-            st.session_state.current_step = 1
-            st.session_state.df = None
-            st.session_state.selected_columns = None
-            st.session_state.preprocessing_done = False
-            st.session_state.preprocessing_complete = False
-            st.session_state.chart_type = None
-            st.session_state.standardization = False
-            st.session_state.missing_values = False
-            st.session_state.outliers = False
-            st.session_state.normalization = False
-
-            # Clear file uploader
-            if 'file_uploader' in st.session_state:
-                st.session_state.file_uploader = None
-
-            # Rerun to refresh the page
-            st.rerun()
+            reset_session_state()
 
 
 if __name__ == "__main__":
