@@ -1,5 +1,5 @@
 tunnel: streamlit
-credentials-file: C:/Users/USER/.cloudflared/70cfadb4-882e-4e4d-8a78-1b3731e30c62.json
+credentials-file: ~/.cloudflared/70cfadb4-882e-4e4d-8a78-1b3731e30c62.json
 
 ingress:
   - hostname: krsearchrealestate.work
