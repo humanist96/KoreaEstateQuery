@@ -2,7 +2,7 @@
 tunnel: 70cfadb4-882e-4e4d-8a78-1b3731e30c62
 
 # 터널 자격 증명 파일 경로 (Cloudflare에서 제공한 파일의 경로)
-credentials-file: 70cfadb4-882e-4e4d-8a78-1b3731e30c62.json
+credentials-file: ~/.cloudflared/70cfadb4-882e-4e4d-8a78-1b3731e30c62.json
 
 origincert: ~/.cloudflared/cert.pem
 
