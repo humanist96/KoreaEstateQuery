@@ -175,26 +175,31 @@ def data_visualization():
 
     # STEP 1: Data Selection
     with st.expander("STEP 1. Data Selection", expanded=st.session_state.current_step == 1):
-        if st.session_state.current_step >= 1:
-            uploaded_file = st.file_uploader("Upload your data",
-                                             type=["csv", "xlsx"],
-                                             help="* File size must be less than 5MB",
-                                             key="file_uploader")
+        if 'file_uploader' not in st.session_state:
+            st.session_state.file_uploader = None
 
-            if uploaded_file is not None:
-                try:
-                    if uploaded_file.name.endswith('.csv'):
-                        st.session_state.df = pd.read_csv(uploaded_file)
-                    else:
-                        st.session_state.df = pd.read_excel(uploaded_file)
+        uploaded_file = st.file_uploader("Upload your data",
+                                         type=["csv", "xlsx"],
+                                         help="* File size must be less than 5MB",
+                                         key="file_uploader")
 
-                    st.success("Data loaded successfully!")
-                    if st.button("Proceed to Preprocessing →", type="primary"):
-                        st.session_state.current_step = 2
-                        st.rerun()
+        if uploaded_file is not None:
+            try:
+                if uploaded_file.name.endswith('.csv'):
+                    st.session_state.df = pd.read_csv(uploaded_file)
+                else:
+                    st.session_state.df = pd.read_excel(uploaded_file)
 
-                except Exception as e:
-                    st.error(f"Error loading data: {str(e)}")
+                st.success("Data loaded successfully!")
+                if st.button("Proceed to Preprocessing →", type="primary"):
+                    st.session_state.current_step = 2
+                    st.rerun()
+
+            except Exception as e:
+                st.error(f"Error loading data: {str(e)}")
+        else:
+            st.session_state.df = None
+            st.session_state.current_step = 1
 
     # STEP 2: Data Overview & Preprocessing
     if st.session_state.current_step >= 2:
@@ -330,6 +335,7 @@ def data_visualization():
     # Reset button at the bottom
     if st.session_state.current_step > 1:
         if st.button("Reset All"):
+            # Reset all session states
             st.session_state.current_step = 1
             st.session_state.df = None
             st.session_state.selected_columns = None
@@ -340,6 +346,12 @@ def data_visualization():
             st.session_state.missing_values = False
             st.session_state.outliers = False
             st.session_state.normalization = False
+
+            # Clear file uploader
+            if 'file_uploader' in st.session_state:
+                st.session_state.file_uploader = None
+
+            # Rerun to refresh the page
             st.rerun()
 
 
