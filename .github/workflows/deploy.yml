@@ -28,10 +28,10 @@ jobs:
           sudo mv cloudflared-linux-amd64 /usr/local/bin/cloudflared
           sudo chmod +x /usr/local/bin/cloudflared
 
-      - name: Set up Origin Certificate
+      - name: Set up Tunnel Credentials
         run: |
           mkdir -p ~/.cloudflared
-          echo "${{ secrets.CLOUDFLARED_ORIGIN_CERT }}" > ~/.cloudflared/cert.pem
+          echo "${{ secrets.CLOUDFLARED_TUNNEL_CREDENTIALS }}" > ~/.cloudflared/70cfadb4-882e-4e4d-8a78-1b3731e30c62.json
 
       - name: Verify cloudflared Installation
         run: |
