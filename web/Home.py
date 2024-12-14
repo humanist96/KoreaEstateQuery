@@ -5,7 +5,7 @@ from PIL import Image
 def main():
     # Set page configuration
     st.set_page_config(
-        page_title="K-RealEstate AI Assistant",
+        page_title="K-RealEstate AI Search System",
         page_icon="🏠",
         layout="wide"
     )
@@ -25,84 +25,74 @@ def main():
             box-shadow: 0 1px 3px rgba(0,0,0,0.12) !important;
             margin-bottom: 1rem !important;
         }
+        .mission-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            text-align: center;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
         </style>
     """, unsafe_allow_html=True)
 
-    # Sidebar
-    with st.sidebar:
-        st.title("Navigation")
-        st.page_link("Home.py", label="Home", icon="🌟")
-        st.page_link("pages/Search.py", label="Property Search", icon="🔍")
-        st.page_link("pages/Raw_Data_Visualization.py", label="Raw Data Visualization", icon="📊")
-
-        st.markdown("---")
-        with st.expander("Contact"):
-            st.markdown("📧 support@example.com")
-            st.markdown("📱 +82 10-1234-5678")
 
     # Main content
-    st.title("K-RealEstate AI Assistant")
-    st.subheader("Intelligent Korean Real Estate Data Analysis Platform")
+    st.title("K-RealEstate AI Search System")
+    st.subheader("Intelligent Korean Real Estate Search Platform")
     st.markdown("---")
 
-    # Our Mission - Full width
+    # Our Mission - Enhanced presentation
     with st.expander("🎯 Our Mission", expanded=True):
         st.markdown("""
-        Transforming Korean real estate data into actionable insights through AI.
-
-        We aim to provide accurate, real-time property information and market analysis
-        using cutting-edge AI technology.
-        """)
+            <div class="mission-text">
+                Enhancing real estate search with natural language processing.<br>
+                Simply describe your ideal home in your own words.<br>
+                Let AI understand your needs and preferences.<br>
+                Find your perfect property faster than ever.
+            </div>
+        """, unsafe_allow_html=True)
 
     # Technology Stack and Data Sources in two columns
     col1, col2 = st.columns(2)
-
     with col1:
         with st.expander("🛠 Technology Stack", expanded=True):
             st.markdown("""
-            - Crawl4AI
-            - OpenAI API
-            - PandasAI
-            - Streamlit
+                - Streamlit (Web Framework)
+                - Crawl4AI (Data Collection)
+                - OpenAI API (NLP Engine)
+                - PandasAI (Data Analysis)
             """)
-
     with col2:
         with st.expander("📊 Data Sources", expanded=True):
             st.markdown("""
-            - Naver Real Estate
-            - Public Property Records
-            - Market Analysis Reports
-            - Regional Development Plans
+                - [Naver Real Estate](https://land.naver.com/)
             """)
 
-    # How It Works section with consistent styling
+    # How It Works section - Framework-focused descriptions
     st.markdown("---")
     st.markdown("### How It Works")
-
     col1, col2, col3 = st.columns(3)
 
     with col1:
         with st.expander("1. Data Collection", expanded=True):
             st.markdown("""
-            - Automated crawling system
-            - Real-time data updates
-            - Multiple source integration
+                - Streamlit-powered web scraping
+                - Automated Naver Real Estate data collection
             """)
 
     with col2:
         with st.expander("2. AI Processing", expanded=True):
             st.markdown("""
-            - Natural language processing
-            - Data structuring
-            - Pattern recognition
+                - OpenAI API natural language processing
+                - PandasAI-driven data analysis
             """)
 
     with col3:
-        with st.expander("3. User Interaction", expanded=True):
+        with st.expander("3. User Interface", expanded=True):
             st.markdown("""
-            - Intuitive query interface
-            - Custom search filters
-            - Interactive visualizations
+                - Streamlit interactive components
+                - Real-time search results
             """)
 
     # Call-to-action with better spacing

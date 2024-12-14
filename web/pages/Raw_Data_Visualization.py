@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import plotly.graph_objects as go
 
 
 def set_custom_style():
@@ -129,16 +128,16 @@ def data_visualization():
     set_custom_style()
 
     # Sidebar
-    with st.sidebar:
-        st.title("Navigation")
-        st.page_link("Home.py", label="Home", icon="🏠")
-        st.page_link("pages/Search.py", label="Search", icon="🔍")
-        st.page_link("pages/Raw_Data_Visualization.py", label="Raw Data Visualization", icon="📊")
-
-        st.markdown("---")
-        with st.expander("Contact"):
-            st.markdown("📧 support@example.com")
-            st.markdown("📱 +82 10-1234-5678")
+    # with st.sidebar:
+    #     st.title("Navigation")
+    #     st.page_link("Home.py", label="Home", icon="🏠")
+    #     st.page_link("pages/Search.py", label="Search", icon="🔍")
+    #     st.page_link("pages/Raw_Data_Visualization.py", label="Raw Data Visualization", icon="📊")
+    #
+    #     st.markdown("---")
+    #     with st.expander("Contact"):
+    #         st.markdown("📧 support@example.com")
+    #         st.markdown("📱 +82 10-1234-5678")
 
     st.title("Data Visualization")
     initialize_session_state()

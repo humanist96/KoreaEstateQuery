@@ -1,88 +1,91 @@
-from crawl4ai import Crawler, Selector
+# from gathering_data.classes import *
+from gathering_data.util import *
 import requests
 import pandas as pd
-import os
+import urllib.parse
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
 
 
-class NaverLandCrawler(Crawler):
-    def __init__(self, base_url="https://land.naver.com/"):
-        super().__init__()
-        self.base_url = base_url
-        self.headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+class NaverRECrawler:
+    def __init__(self, coord_file="gathering_data/data/bjd_info_except_boundary.csv"):
+        # 기본 좌표 (Fallback)
+        self.default_coordinates = {
+            "강남역": (37.4979462, 127.0276206),
+            "역삼역": (37.5006, 127.0368),
+            "선릉역": (37.5044, 127.0505),
+            "서울역": (37.5551, 126.9707),
+            "한강공원": (37.5662, 126.8763),
+            "홍대입구역": (),
+            "이태원역": (),
+            "부산역": (),
+            "대전역": (),
         }
+        # 파일에서 좌표 로드
+        self.coordinates = self.load_coordinates_from_file(coord_file)
 
-    def fetch_page(self, url):
-        try:
-            response = requests.get(url, headers=self.headers)
-            response.raise_for_status()
-            return response.text
-        except requests.exceptions.RequestException as e:
-            print(f"Error fetching URL {url}: {e}")
-            return None
+    def load_coordinates_from_file(self, file_path):
+        """Load coordinates from CSV file."""
+        data = pd.read_csv(file_path, encoding="cp949")
+        coordinates = {
+            row["bjd_nm"]: (row["center_lati"], row["center_long"])
+            for _, row in data.iterrows()
+        }
+        return coordinates
 
-    def parse_listings(self, html_content):
-        # Use Selector from Crawl4AI to parse HTML
-        selector = Selector(html_content)
-        listings = []
+    def get_coordinates(self, query):
+        """Get coordinates by query from loaded data or fallback."""
+        if query in self.coordinates:
+            return NLocation(*self.coordinates[query])
+        if query in self.default_coordinates:
+            return NLocation(*self.default_coordinates[query])
+        raise Exception(f"Location not found for: {query}")
 
-        # Select elements containing property information
-        for item in selector.css("div.c_aside"):
-            try:
-                name = item.css("span.title::text").get()
-                price = item.css("span.price::text").get()
-                area = item.css("span.area::text").get()
-                address = item.css("span.address::text").get()
-                link = item.css("a::attr(href)").get()
+    def search_location(self, query):
+        location = self.get_coordinates(query)
+        print(f"Searching around coordinates: {location}")
+        sector = get_sector(location)
+        return self._get_real_estate_data(sector)
 
-                listings.append({
-                    "Name": name,
-                    "Price": price,
-                    "Area": area,
-                    "Address": address,
-                    "Link": f"{self.base_url}{link}" if link else None
-                })
-            except Exception as e:
-                print(f"Error parsing item: {e}")
+    def _get_real_estate_data(self, sector):
+        things = get_things_each_direction(sector)
+        neighbors = get_all_neighbors(sector)
+        update_things_intersection(things, neighbors, get_distance_standard())
+        df = pd.DataFrame([t.get_list() for t in things], columns=NThing.HEADER)
 
-        return listings
+        # 가격 단위 변환 (만원 -> 억원)
+        price_columns = [
+            "minDeal",
+            "maxDeal",
+            "medianDeal",
+            "minLease",
+            "maxLease",
+            "medianLease",
+        ]
+        for col in price_columns:
+            if col in df.columns:
+                df[col] = df[col].apply(
+                    lambda x: round(x / 10000, 2) if pd.notnull(x) else x
+                )
 
-    def crawl(self, query):
-        search_url = f"{self.base_url}search/search.naver?query={query}"
-        html_content = self.fetch_page(search_url)
-        if not html_content:
-            return []
-
-        listings = self.parse_listings(html_content)
-        return listings
-
-    def save_to_excel(self, data, file_name="output.xlsx"):
-        if not data:
-            print("No data to save.")
-            return
-
-        df = pd.DataFrame(data)
-        df.to_excel(file_name, index=False)
-        print(f"Data saved to {file_name}")
+        return df
 
 
 if __name__ == "__main__":
-    crawler = NaverLandCrawler()
-    location = input("검색할 지역을 입력하세요 (예: 강남역): ")
-
     try:
-        listings = crawler.crawl(location)
-        print(f"총 {len(listings)}개의 매물이 검색되었습니다.")
+        coord_file = "gathering_data/data/bjd_info_except_boundary.csv"
+        crawler = NaverRECrawler(coord_file)
 
-        # 미리 보기 출력
-        for item in listings[:5]:
-            print(item)
+        location = input("검색할 위치를 입력하세요 (예: 강남역): ")
+        df = crawler.search_location(location)
 
-        # 엑셀로 저장
-        output_file = f"{location}_real_estate_listings.xlsx"
-        crawler.save_to_excel(listings, output_file)
+        print(f"\n총 {len(df)}개의 매물이 검색되었습니다.")
+        print(df.head())
+
+        output_file = f"{location}_real_estate_data.xlsx"
+        df.to_excel(output_file, index=False)
+        print(f"\n데이터가 {output_file}로 저장되었습니다.")
     except Exception as e:
-        print(f"Error during crawling: {e}")
+        print(f"Error: {str(e)}")
