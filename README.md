@@ -62,8 +62,6 @@ OPENAI_API_KEY=your_openai_api_key_here
 GOOGLE_API_KEY=your_google_api_key_here
 ```
 
-2. Adjust settings in `config.py` as necessary.
-
 ### Running the Application
 
 Launch the platform using the following command:
@@ -106,7 +104,7 @@ k-realestate-ai-assistant/
 
 ## 📜 License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
+This project is licensed under the Apache-2.0 license. See the [LICENSE](LICENSE) file for more information.
 
 ## 🙏 Acknowledgments
 
