@@ -1,5 +1,3 @@
-import pandas as pd
-import numpy as np
 from pandasai import SmartDataframe
 from pandasai.llm import OpenAI
 from dotenv import load_dotenv
@@ -36,37 +34,6 @@ def format_analysis_results(df, query_result):
         return {"error": f"Formatting error: {str(e)}"}
 
 
-from pandasai import SmartDataframe
-from pandasai.llm import OpenAI
-from dotenv import load_dotenv
-import os
-import pandas as pd
-
-
-def format_analysis_results(df, query_result):
-    """
-    Format the analysis results into a structured output.
-    """
-    try:
-        stats = {
-            'Total Properties': len(df),
-            'Unique Buildings': df['Name'].nunique(),
-            'Average Price': df['MinPrice'].mean(),
-            'Average Area': df['Area'].mean(),
-            'Price Range': (df['MinPrice'].min(), df['MaxPrice'].max())
-        }
-
-        formatted_result = {
-            "stats": stats,
-            "top_properties": df.nlargest(5, 'MaxPrice')[['Name', 'MinPrice', 'MaxPrice', 'Area']],
-            "affordable_properties": df.nsmallest(5, 'MinPrice')[['Name', 'MinPrice', 'MaxPrice', 'Area']],
-            "query_result": query_result
-        }
-        return formatted_result
-    except Exception as e:
-        return {"error": f"Formatting error: {str(e)}"}
-
-
 def run(input_query, model, location=None, data=None):
     try:
         # Data retrieval
@@ -94,7 +61,7 @@ def run(input_query, model, location=None, data=None):
             if not OPENAI_API_KEY:
                 raise ValueError("OpenAI API key not found")
 
-            llm = OpenAI(api_token=OPENAI_API_KEY, model_name="gpt-4")
+            llm = OpenAI(api_token=OPENAI_API_KEY, model_name="gpt-4o")
             sdf = SmartDataframe(df, config={
                 "llm": llm,
                 "verbose": True,

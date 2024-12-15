@@ -1,11 +1,8 @@
-# search.py
-import streamlit as st
 import pandas as pd
+import streamlit as st
 from dotenv import load_dotenv
-import os
 import sys
 from pathlib import Path
-
 
 
 # Set project root directory
@@ -23,34 +20,83 @@ load_dotenv()
 st.set_page_config(page_title="Korea Real Estate Search", layout="centered")
 
 # Available locations and predefined queries
-LOCATIONS = ["강남역", "서울역", "한강공원", "홍대입구역", "이태원역", "부산역", "대전역"]
+# LOCATIONS = ["강남역", "서울역", "한강공원", "홍대입구역", "이태원역", "부산역", "대전역"]
+LOCATIONS = [
+    "Gangnam Station(강남역)",
+    "Seoul Station(서울역)",
+    "Hangang Park(한강공원)",
+    "Hongdae Station(홍대입구역)",
+    "Itaewon Station(이태원역)",
+    "Busan Station(부산역)",
+    "Daejeon Station(대전역)"
+]
 LOCATION_MAPPING = {
-    "강남역": "Gangnam Station",
-    "서울역": "Seoul Station",
-    "한강공원": "Hangang Park",
-    "홍대입구역": "Hongdae Station",
-    "이태원역": "Itaewon Station",
-    "부산역": "Busan Station",
-    "대전역": "Daejeon Station"
+    "Gangnam Station(강남역)": "Gangnam Station",
+    "Seoul Station(서울역)": "Seoul Station",
+    "Hangang Park(한강공원)": "Hangang Park",
+    "Hongdae Station(홍대입구역)": "Hongdae Station",
+    "Itaewon Station(이태원역)": "Itaewon Station",
+    "Busan Station(부산역)": "Busan Station",
+    "Daejeon Station(대전역)": "Daejeon Station"
 }
 
+# PREDEFINED_QUERIES = {
+#     "가격 관련": [
+#         "3억원 이하의 매물 찾기",
+#         "월세가 가장 낮은 top 3 매물은?",
+#         "평당 가격이 가장 낮은 매물은?"
+#     ],
+#     "면적/구조 관련": [
+#         "남향이면서 넓은 면적의 매물 추천",
+#         "20평 이상의 매물 목록",
+#         "주차 공간이 있는 매물만 보여주기"
+#     ],
+#     "건물 상태": [
+#         "2010년 이후 지어진 건물 보여주기",
+#         "리모델링된 매물 찾기",
+#         "관리상태가 좋은 매물 추천"
+#     ]
+# }
 PREDEFINED_QUERIES = {
-    "가격 관련": [
-        "3억원 이하의 매물 찾기",
-        "월세가 가장 낮은 top 3 매물은?",
-        "평당 가격이 가장 낮은 매물은?"
+    "Price-related": [
+        "Find properties priced below 300 million KRW",
+        "Top 3 properties with the lowest monthly rent",
+        "Properties with the lowest price per square meter"
     ],
-    "면적/구조 관련": [
-        "남향이면서 넓은 면적의 매물 추천",
-        "20평 이상의 매물 목록",
-        "주차 공간이 있는 매물만 보여주기"
+    "Area/Structure-related": [
+        "Recommend properties that are south-facing and have a large area",
+        "List of properties with an area of 20 pyeong or more",
+        "Show only properties with parking spaces"
     ],
-    "건물 상태": [
-        "2010년 이후 지어진 건물 보여주기",
-        "리모델링된 매물 찾기",
-        "관리상태가 좋은 매물 추천"
+    "Building Condition": [
+        "Show buildings constructed after 2010",
+        "Find remodeled properties",
+        "Recommend properties in good maintenance condition"
     ]
 }
+
+
+def parse_property_string(input_string):
+    import ast
+    import pandas as pd
+    # Extract the list part from the string (from '[' to ']')
+    start_idx = input_string.find('[')
+    end_idx = input_string.rfind(']') + 1
+    list_str = input_string[start_idx:end_idx]
+
+    # Convert string representation of list to actual list
+    try:
+        property_list = ast.literal_eval(list_str)
+    except:
+        print("Error parsing the string")
+        return None
+
+    # Convert to DataFrame
+    df = pd.DataFrame(property_list)
+
+    # Display up to 20 rows (or all if less than 20)
+    display_rows = min(20, len(df))
+    return df.head(display_rows)
 
 
 def initialize_session_state():
@@ -86,7 +132,8 @@ def main():
         if "Direct" in query_method:
             search_query = st.text_input(
                 "Enter your question",
-                placeholder="예시: 남향이면서 넓은 면적의 매물 추천"
+                # placeholder="예시: 남향이면서 넓은 면적의 매물 추천"
+                placeholder = "Example: Recommend properties that are south-facing and have a large area"
             )
         else:
             # Category selection
@@ -117,6 +164,8 @@ def main():
                     # Run the analysis
                     contextualized_query = f"{selected_location} ({selected_location_eng}): {search_query}"
                     df, query_result = run(contextualized_query, "openai", location=selected_location)
+                    print(df)
+                    print(query_result)
 
                     # 분석 결과 포맷팅
                     if df is not None:
@@ -125,6 +174,8 @@ def main():
 
                         # 2. 특정 칼럼 값이 0인 행 제거 (예: 'Price'가 0인 데이터 제거)
                         df_cleaned = df_cleaned[df_cleaned['MaxPrice'] != 0]
+
+                        df_cleaned = df.reset_index(drop=True)
 
                         formatted_result = format_analysis_results(df_cleaned, query_result)
 
@@ -147,18 +198,21 @@ def main():
 
                         # OpenAI 분석 결과
                         st.markdown("### **Analysis Results**")
-                        st.dataframe(formatted_result["query_result"][:20])
+                        # dffy_result = parse_property_string(formatted_result["value"])
+                        st.dataframe(df[:20], hide_index=True)
 
                         # 최고가 매물
                         st.markdown("### **Top 5 Highest Priced Properties**")
-                        st.table(formatted_result["top_properties"])
+                        # st.table(formatted_result["top_properties"], hide_index=True)
+                        st.dataframe(formatted_result["top_properties"], hide_index=True)
 
                         # 저가 매물
                         st.markdown("### **Top 5 Affordable Properties**")
-                        st.table(formatted_result["affordable_properties"])
+                        # st.table(formatted_result["affordable_properties"], hide_index=True)
+                        st.dataframe(formatted_result["affordable_properties"], hide_index=True)
 
                     else:
-                        st.error("Failed to load data")
+                        st.error("There are no results for the property you're looking for")
 
                 except Exception as e:
                     st.error(f"An error occurred during search: {str(e)}")

@@ -1,46 +1,47 @@
-# K-RealEstate AI Assistant 🏠
+# K-RealEstate AI Search System 🏠
 
-An intelligent real estate data analysis platform that leverages AI to provide insights from Korean property market data. This project combines web crawling, natural language processing, and interactive data visualization to make property data more accessible and understandable.
+An advanced AI-driven platform designed to analyze and present insights from Korean real estate market data. This project integrates web crawling, natural language processing, and interactive data visualization, enabling users to explore property data with ease and precision.
 
-## 🎯 Features
+## 🎯 Key Features
 
 ### 1. Data Collection
-- Automated crawling from Naver Real Estate using Crawl4AI
-- Real-time data updates
-- Multiple data source integration
+- Automated web crawling from [Naver Real Estate](https://land.naver.com/) using **Crawl4AI**
+- Real-time data updates for accurate market insights
+- Seamless integration of multiple data sources
 
 ### 2. AI-Powered Analysis
-- Natural language processing using OpenAI API
-- Structured data processing with PandasAI
-- Intelligent query interpretation and response
+- Natural language processing (NLP) with **OpenAI API**
+- Structured data handling and processing using **PandasAI**
+- Intelligent query interpretation and personalized responses
 
 ### 3. Interactive Visualization
-- Raw data visualization with multiple chart types:
+- Data visualization with versatile chart types:
   - Bar charts
   - Scatter plots
   - Pie charts
   - Donut charts
-- Customizable preprocessing options
-- User-friendly interface built with Streamlit
+- Customizable data preprocessing options
+- User-friendly interface powered by **Streamlit**
 
 ## 🚀 Getting Started
 
 ### Prerequisites
+Ensure the following tools are installed:
 ```bash
-python >= 3.8
+python >= 3.9
 pip
 virtualenv (recommended)
 ```
 
 ### Installation
 
-1. Clone the repository
+1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/k-realestate-ai-assistant.git
-cd k-realestate-ai-assistant
+git clone https://github.com/tjwodud04/KoreaEstateQuery.git
+cd KoreaEstateQuery
 ```
 
-2. Create and activate virtual environment (recommended)
+2. Create and activate a virtual environment (recommended):
 ```bash
 python -m venv venv
 source venv/bin/activate  # Linux/Mac
@@ -48,23 +49,24 @@ source venv/bin/activate  # Linux/Mac
 .\venv\Scripts\activate   # Windows
 ```
 
-3. Install required packages
+3. Install the required dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
 ### Configuration
 
-1. Create a `.env` file in the project root:
+1. Create a `.env` file in the project root with the following content:
 ```env
-OPENAI_API_KEY=your_api_key_here
-CRAWL4AI_API_KEY=your_api_key_here
+OPENAI_API_KEY=your_openai_api_key_here
+GOOGLE_API_KEY=your_google_api_key_here
 ```
 
-2. Update the configuration in `config.py` if needed
+2. Adjust settings in `config.py` as necessary.
 
 ### Running the Application
 
+Launch the platform using the following command:
 ```bash
 streamlit run Home.py
 ```
@@ -73,58 +75,43 @@ streamlit run Home.py
 
 ```
 k-realestate-ai-assistant/
-├── Home.py                 # Main landing page
-├── pages/
-│   ├── property_search.py    # Property search interface
-│   └── data_visualization.py # Data visualization tools
-├── utils/
-│   ├── crawling.py          # Crawling utilities
-│   ├── preprocessing.py     # Data preprocessing functions
-│   └── visualization.py     # Visualization helpers
-├── config.py              # Configuration settings
-├── requirements.txt       # Project dependencies
-└── README.md             # Project documentation
+├── analysis/
+│   ├── PandasAI_Analysis.py          # Data Analysis function
+├── gathering_data/
+│   ├── classes.py
+│   ├── data_gatherer.py               # Data Collecting function
+│   └── util.py
+├── web/
+│   ├──pages/
+│      ├── Estate_Search.py            # Property search interface
+│      └── Raw_Data_Visualization.py # Data visualization tools
+│   └──Home.py                         # Main landing page
+├── example.env                          # Necessary API Setting
+├── requirements.txt                     # Project dependencies
+└── README.md                          # Project documentation
 ```
 
-## 🛠 Technology Stack
+## 🔧 Technology Stack
 
-- **Frontend**: Streamlit
+- **Web**: Streamlit
 - **Data Collection**: Crawl4AI
 - **AI Processing**: OpenAI API
-- **Data Analysis**: PandasAI, Pandas, Numpy
+- **Data Analysis**: PandasAI
 - **Visualization**: Plotly
-- **Data Storage**: CSV, Excel support
 
 ## 📊 Data Sources
 
-- Naver Real Estate
-- Public Property Records
-- Market Analysis Reports
-- Regional Development Plans
+- [Naver Real Estate](https://land.naver.com/)
 
-## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+## 📜 License
 
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 📧 Contact
-
-Your Name - youremail@example.com
-
-Project Link: [https://github.com/yourusername/k-realestate-ai-assistant](https://github.com/yourusername/k-realestate-ai-assistant)
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
 
 ## 🙏 Acknowledgments
 
-- OpenAI for providing the GPT API
-- Streamlit for the amazing web framework
-- Crawl4AI for the crawling capabilities
+- **OpenAI API**
+- **Streamlit** for the web development framework
+- **[Crawl4AI](https://github.com/unclecode/crawl4ai)** for robust data crawling capabilities
+- **[NaverRealEstateHavester](https://github.com/ByungJin-Lee/NaverRealEstateHavester/tree/master)** for collecting data
 - All contributors and users of this project

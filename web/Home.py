@@ -28,7 +28,7 @@ def main():
         .mission-text {
             font-size: 1.2rem;
             line-height: 1.8;
-            text-align: center;
+            text-align: left;
             padding: 1rem;
             background-color: #f8f9fa;
             border-radius: 8px;
