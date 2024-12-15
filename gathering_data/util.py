@@ -2,6 +2,9 @@ from time import sleep
 from haversine import haversine
 from gathering_data.classes import *
 import requests
+from openai import OpenAI
+
+client = OpenAI()
 
 BASE_API_URL = "https://new.land.naver.com/api/"
 # Check Log
@@ -288,3 +291,28 @@ def get_all_on_sector(sector: NSector):
     things = get_things_each_direction(sector)
     neighbors = get_all_neighbors(sector)
     return (sector, things, neighbors)
+
+# streamlit에서 "Direct Input" 으로 검색 시 자연어 query에서 지역만 파싱하는 함수
+def extract_location_from_query(query: str) -> str:
+    """
+    Extract location information from the query using OpenAI API.
+    """
+    try:
+        response = client.chat.completions.create(model="gpt-4o",  # 사용할 모델 지정
+        messages=[
+            {"role": "system", "content": (
+                "You are tasked with extracting the most specific location name mentioned in the user's query. "
+                "The location must be returned as a single neighborhood or district name in English, suitable for use with Google Maps. "
+                "Examples:\n"
+                "- Input: 'Find a house under 300 million won near Hongik University' -> Output: 'Seogyo-dong'\n"
+                "- Input: 'Recommend properties south-facing and large area near Hongik University' -> Output: 'Seogyo-dong'\n"
+                "- Input: 'Apartments in Gangnam station' -> Output: 'Gangnam station'\n"
+                "- Input: 'Properties near Itaewon' -> Output: 'Itaewon'\n"
+            )},
+            {"role": "user", "content": query}
+        ],
+        temperature=0)
+        location = response.choices[0].message.content.strip()
+        return location
+    except Exception as e:
+        return "Seoul"  # 에러 발생 시 기본값으로 서울 반환
