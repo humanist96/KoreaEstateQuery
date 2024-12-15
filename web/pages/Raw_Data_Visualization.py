@@ -154,7 +154,7 @@ def data_visualization():
         if uploaded_file is not None:
             try:
                 if uploaded_file.name.endswith('.csv'):
-                    st.session_state.df = pd.read_csv(uploaded_file)
+                    st.session_state.df = pd.read_csv(uploaded_file, encoding='cp949')
                 else:
                     st.session_state.df = pd.read_excel(uploaded_file)
 
