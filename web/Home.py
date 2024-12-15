@@ -100,8 +100,8 @@ def main():
     st.markdown("### Ready to explore Korean real estate data?")
     col1, col2, col3 = st.columns([2, 1, 2])
     with col2:
-        st.button("Start Searching 🔍", use_container_width=True, type="primary")
-
+        if st.button("Start Searching 🔍", use_container_width=True, type="primary"):
+            st.switch_page("pages/estate_search.py")
 
 if __name__ == "__main__":
     main()
