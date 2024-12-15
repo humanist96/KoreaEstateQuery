@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 import sys
 from pathlib import Path
 
-
 # Set project root directory
 current_dir = Path(__file__).resolve().parent
 project_root = current_dir.parent.parent
@@ -13,6 +12,7 @@ if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
 from analysis.PandasAI_Analysis import run, format_analysis_results
+from gathering_data.util import extract_location_from_query
 
 load_dotenv()
 
@@ -111,9 +111,27 @@ def main():
 
     st.title("🏢 Korea Real Estate Search")
 
-    col1, col2 = st.columns([2, 1])
+    # Query input method selection
+    query_method = st.radio(
+        "Choose Search Method",
+        ["Predefined Questions", "Direct Input"]
+    )
 
-    with col1:
+    search_query = ""
+
+    if "Direct" in query_method:
+        search_query = st.text_input(
+            "Enter your question",
+            placeholder="Refer to the example below"  
+        )
+
+        st.markdown(
+            '<small style="color: grey;">Example: Find a house under 300 million won near gangnam<br>'
+            'If no specific location is mentioned, the search will default to all of Seoul.</small>',
+            unsafe_allow_html=True
+        )
+
+    else:
         # Location selector
         selected_location = st.selectbox(
             "Select Location",
@@ -121,51 +139,31 @@ def main():
         )
         selected_location_eng = LOCATION_MAPPING[selected_location]
 
-        # Query input method selection
-        query_method = st.radio(
-            "Choose Search Method",
-            ["Direct Input", "Predefined Questions"]
+        # Category selection
+        category = st.selectbox(
+            "Select Category",
+            list(PREDEFINED_QUERIES.keys())
         )
 
-        search_query = ""
-
-        if "Direct" in query_method:
-            search_query = st.text_input(
-                "Enter your question",
-                # placeholder="예시: 남향이면서 넓은 면적의 매물 추천"
-                placeholder = "Example: Recommend properties that are south-facing and have a large area"
+        # Query selection from category
+        if category:
+            search_query = st.selectbox(
+                "Select Question",
+                PREDEFINED_QUERIES[category]
             )
-        else:
-            # Category selection
-            category = st.selectbox(
-                "Select Category",
-                list(PREDEFINED_QUERIES.keys())
-            )
-
-            # Query selection from category
-            if category:
-                search_query = st.selectbox(
-                    "Select Question",
-                    PREDEFINED_QUERIES[category]
-                )
-
-    with col2:
-        st.subheader("Search History")
-        if st.session_state.search_history:
-            for idx, (loc, query, time) in enumerate(st.session_state.search_history[-5:]):
-                st.text(f"{time}\n{loc}: {query}")
-        else:
-            st.text("No search history available")
 
     if st.button("Search"):
         if search_query:
-            with st.spinner(f"Analyzing data for {selected_location}..."):
+            with st.spinner(f"Analyzing data..."):
                 try:
+                    # Direct Input일 경우 지역 자동 추출
+                    if "Direct" in query_method:
+                        selected_location = extract_location_from_query(search_query)
+                        selected_location_eng = selected_location
+                
                     # Run the analysis
                     contextualized_query = f"{selected_location} ({selected_location_eng}): {search_query}"
                     df, query_result = run(contextualized_query, "openai", location=selected_location)
-                    print(df)
-                    print(query_result)
 
                     # 분석 결과 포맷팅
                     if df is not None:
@@ -175,13 +173,18 @@ def main():
                         # 2. 특정 칼럼 값이 0인 행 제거 (예: 'Price'가 0인 데이터 제거)
                         df_cleaned = df_cleaned[df_cleaned['MaxPrice'] != 0]
 
-                        df_cleaned = df.reset_index(drop=True)
+                        df_cleaned = df_cleaned.reset_index(drop=True)
 
                         formatted_result = format_analysis_results(df_cleaned, query_result)
 
                         # 결과 표시
                         st.success("Search completed.")
                         st.markdown("### **📊 Analysis Summary**")
+                        st.markdown(
+                            '<small>Selected Location<br>'
+                            f'**{selected_location}**</small>',
+                            unsafe_allow_html=True
+                        )
 
                         # 통계 정보 표시
                         stats = formatted_result["stats"]
@@ -199,7 +202,7 @@ def main():
                         # OpenAI 분석 결과
                         st.markdown("### **Analysis Results**")
                         # dffy_result = parse_property_string(formatted_result["value"])
-                        st.dataframe(df[:20], hide_index=True)
+                        st.dataframe(df_cleaned[:20], hide_index=True)
 
                         # 최고가 매물
                         st.markdown("### **Top 5 Highest Priced Properties**")
