@@ -6,8 +6,7 @@ An advanced AI-driven platform designed to analyze and present insights from Kor
 
 ### 1. Data Collection
 - Automated web crawling from [Naver Real Estate](https://land.naver.com/) using **Crawl4AI**
-- Real-time data updates for accurate market insights
-- Seamless integration of multiple data sources
+- Real-time data collection for accurate market insights
 
 ### 2. AI-Powered Analysis
 - Natural language processing (NLP) with **OpenAI API**
@@ -28,7 +27,7 @@ An advanced AI-driven platform designed to analyze and present insights from Kor
 ### Prerequisites
 Ensure the following tools are installed:
 ```bash
-python >= 3.9
+python == 3.9
 pip
 virtualenv (recommended)
 ```
