@@ -1,6 +1,6 @@
 # K-RealEstate AI Search System 🏠
 
-An advanced AI-driven platform designed to analyze and present insights from Korean real estate market data. This project integrates web crawling, natural language processing, and interactive data visualization, enabling users to explore property data with ease and precision.
+An advanced AI-driven platform designed to analyze and present insights from Korean real estate data. This project integrates web crawling, natural language processing, and interactive data visualization, enabling users to explore property data with ease and precision.
 
 ## 🎯 Key Features
 
