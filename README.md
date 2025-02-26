@@ -1,3 +1,8 @@
+Due to Google API Key issues, the service is currently unavailable. Instead, we provide a detailed demo video, which you can check below.
+
+### Video Explanation
+https://github.com/user-attachments/assets/096e1b37-b753-4533-9f78-d819087c84f6
+
 # K-RealEstate AI Search System 🏠
 
 An advanced AI-driven platform designed to analyze and present insights from Korean real estate data. This project integrates web crawling, natural language processing, and interactive data visualization, enabling users to explore property data with ease and precision.
