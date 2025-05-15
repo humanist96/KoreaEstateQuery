@@ -10,6 +10,7 @@ import streamlit as st
 load_dotenv()
 
 os.environ["OPENAI_API_KEY"] = st.secrets["api_key"]
+os.environ["GOOGLE_API_KEY"] = st.secrets["google_api_key"]
 
 class NaverRECrawler:
     def __init__(self):
