@@ -3,6 +3,7 @@ from haversine import haversine
 from gathering_data.classes import *
 import requests
 from openai import OpenAI
+import streamlit as st
 
 client = OpenAI()
 
@@ -11,6 +12,7 @@ BASE_API_URL = "https://new.land.naver.com/api/"
 # Time
 IS_LOGGING = True
 
+os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
 def get(url="", params={}):
     rep = requests.get(BASE_API_URL + url, params=params, headers={'User-Agent': '*'})
