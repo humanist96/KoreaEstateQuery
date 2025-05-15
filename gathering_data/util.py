@@ -4,6 +4,7 @@ from gathering_data.classes import *
 import requests
 from openai import OpenAI
 import streamlit as st
+import os
 
 os.environ["OPENAI_API_KEY"] = st.secrets["api_key"]
 
