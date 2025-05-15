@@ -12,7 +12,7 @@ BASE_API_URL = "https://new.land.naver.com/api/"
 # Time
 IS_LOGGING = True
 
-os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
+os.environ["OPENAI_API_KEY"] = st.secrets["api_key"]
 
 def get(url="", params={}):
     rep = requests.get(BASE_API_URL + url, params=params, headers={'User-Agent': '*'})
