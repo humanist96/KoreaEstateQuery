@@ -9,6 +9,7 @@ import streamlit as st
 
 load_dotenv()
 
+os.environ["OPENAI_API_KEY"] = st.secrets["api-key"]
 
 class NaverRECrawler:
     def __init__(self):
