@@ -16,7 +16,7 @@ class NaverRECrawler:
             "역삼역": (37.5006, 127.0368),
             "선릉역": (37.5044, 127.0505),
         }
-        self.api_key = st.secrets["api_key"]
+        self.api_key = st.secrets["google_api_key"]
 
     def get_coordinates(self, query):
         encoded_query = urllib.parse.quote(query)
