@@ -5,14 +5,14 @@ import requests
 from openai import OpenAI
 import streamlit as st
 
+os.environ["OPENAI_API_KEY"] = st.secrets["api_key"]
+
 client = OpenAI()
 
 BASE_API_URL = "https://new.land.naver.com/api/"
 # Check Log
 # Time
 IS_LOGGING = True
-
-os.environ["OPENAI_API_KEY"] = st.secrets["api_key"]
 
 def get(url="", params={}):
     rep = requests.get(BASE_API_URL + url, params=params, headers={'User-Agent': '*'})
