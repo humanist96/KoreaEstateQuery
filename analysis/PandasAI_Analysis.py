@@ -61,7 +61,7 @@ def run(input_query, model, location=None, data=None):
             if not OPENAI_API_KEY:
                 raise ValueError("OpenAI API key not found")
 
-            llm = OpenAI(api_token=OPENAI_API_KEY, model_name="gpt-4o")
+            llm = OpenAI(api_token=st.secrets["api_key"], model_name="gpt-4o")
             sdf = SmartDataframe(df, config={
                 "llm": llm,
                 "verbose": True,
