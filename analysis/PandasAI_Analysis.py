@@ -3,6 +3,7 @@ from pandasai.llm import OpenAI
 from dotenv import load_dotenv
 import os
 from gathering_data.data_gatherer import NaverRECrawler
+import streamlit as st
 
 load_dotenv()
 
@@ -57,7 +58,7 @@ def run(input_query, model, location=None, data=None):
 
         # OpenAI model handling
         if model == "openai":
-            OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+            OPENAI_API_KEY = st.secrets["api_key"]
             if not OPENAI_API_KEY:
                 raise ValueError("OpenAI API key not found")
 
